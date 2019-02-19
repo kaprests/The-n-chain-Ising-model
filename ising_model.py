@@ -51,12 +51,14 @@ for i in range(n_max):
 		eigen_val_vec[i][j] = np.log(max_eigen_value(beta_vals[j], P_elem, spin_conf, B_ex))
 		eigen_val_vec_b[i][j] = np.log(max_eigen_value(beta_const, P_elem, spin_conf, B_vals[j]))
 	print(eigen_val_vec_b[i])
-	eigen_val_vec_d[i] = np.gradient(eigen_val_vec_b[i], B_vals)
+	eigen_val_vec_d[i] = np.gradient(eigen_val_vec_b[i], B_vals)/((i+2)*beta_const)
 	plt.plot(beta_vals, eigen_val_vec[i])
+plt.savefig("fig1.pdf")
 plt.show()
 
 
 for elem in eigen_val_vec_d:
 	plt.plot(B_vals, elem)
+plt.savefig("fig2.pdf")
 plt.show()
 
