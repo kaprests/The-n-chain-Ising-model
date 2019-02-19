@@ -6,7 +6,7 @@ B_ex = 2
 J_par = 1
 J_tan = 1
 n_max = 5 # Really n_max -1
-beta_const = 0.05
+beta_const = 1
 
 def gen_spin_conf(n):
 	spin_conf = np.ones([2**n, n])
@@ -55,8 +55,7 @@ for i in range(n_max):
 	plt.plot(beta_vals, eigen_val_vec[i])
 plt.show()
 
-# The code commented out below is supposed to calculate and plot magnetization, instead it uses a year or so
-# to produce a plot of a straight line.
+# Non working code for calculating and plotting magnetization below
 '''
 for i in range(n_max):
 	spin_conf = gen_spin_conf(i+2)
@@ -65,5 +64,4 @@ for i in range(n_max):
 	eigen_val_vec_d[i] = np.gradient(eigen_val_vec_b[i], B_vals)/((i+2)*beta_const)
 	plt.plot(B_vals, eigen_val_vec_d[i])
 plt.show()
-
 '''
