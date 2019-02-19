@@ -6,7 +6,7 @@ B_ex = 2
 J_par = 1
 J_tan = 1
 n_max = 5 # Really n_max -1
-beta_const = 1
+beta_const = 0.5
 
 def gen_spin_conf(n):
 	spin_conf = np.ones([2**n, n])
@@ -32,36 +32,31 @@ def gen_P_matrix(P_elem, spin_conf, Be, beta, Jp, Jt):
 	return P
 
 
-def eigen_values(beta, P_elem, spin_conf, Be, Jp=J_par, Jt=J_tan):
+def max_eigen_value(beta, P_elem, spin_conf, Be, Jp=J_par, Jt=J_tan):
 	P = gen_P_matrix(P_elem, spin_conf, Be, beta, Jp, Jt)
 	e_vals, e_vecs = np.linalg.eig(P) 
-	return np.real(e_vals)
-
-
-def max_eigen_value(beta, eigen_values, P_elem, spin_conf, Be):
-	return np.amax(eigen_values(beta, P_elem, spin_conf, Be))
+	return np.amax(np.real(e_vals))
 
 
 beta_vals = np.linspace(0.005, 1, 100)
-B_vals = np.linspace(-1, 1, 200)
+B_vals = np.linspace(-1, 1, 100)
 eigen_val_vec = np.zeros([n_max, 100])
-eigen_val_vec_b = np.zeros([n_max, 200])
-eigen_val_vec_d = np.zeros([n_max, 200])
+eigen_val_vec_b = np.zeros([n_max, 100])
+eigen_val_vec_d = np.zeros([n_max, 100])
+
 
 for i in range(n_max):
 	spin_conf = gen_spin_conf(i+2)
 	for j in range(beta_vals.size):
-		eigen_val_vec[i][j] = np.log(max_eigen_value(beta_vals[j], eigen_values, P_elem, spin_conf, B_ex))
+		eigen_val_vec[i][j] = np.log(max_eigen_value(beta_vals[j], P_elem, spin_conf, B_ex))
+		eigen_val_vec_b[i][j] = np.log(max_eigen_value(beta_const, P_elem, spin_conf, B_vals[j]))
+	print(eigen_val_vec_b[i])
+	eigen_val_vec_d[i] = np.gradient(eigen_val_vec_b[i], B_vals)
 	plt.plot(beta_vals, eigen_val_vec[i])
 plt.show()
 
-# Non working code for calculating and plotting magnetization below
-'''
-for i in range(n_max):
-	spin_conf = gen_spin_conf(i+2)
-	for j in range(B_vals.size):
-		eigen_val_vec_b[i][j] = np.log(max_eigen_value(beta_const, eigen_values, P_elem, spin_conf, B_vals[j]))
-	eigen_val_vec_d[i] = np.gradient(eigen_val_vec_b[i], B_vals)/((i+2)*beta_const)
-	plt.plot(B_vals, eigen_val_vec_d[i])
+
+for elem in eigen_val_vec_d:
+	plt.plot(B_vals, elem)
 plt.show()
-'''
+
