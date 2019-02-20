@@ -5,7 +5,7 @@ import sympy as sp
 B_ex = 2
 J_par = 1
 J_tan = 1
-n_max = 7 # Really n_max -1
+n_max = 5 # Really n_max -1
 beta_const = 0.5
 
 def gen_spin_conf(n):
@@ -43,13 +43,18 @@ B_vals = np.linspace(-1, 1, 100)
 eigen_val_vec = np.zeros([n_max, 100])
 eigen_val_vec_b = np.zeros([n_max, 100])
 eigen_val_vec_d = np.zeros([n_max, 100])
+spes_heat_vec = np.zeros([5, 100])
 
 
 for i in range(n_max):
 	spin_conf = gen_spin_conf(i+2)
+	print(i+2)
 	for j in range(beta_vals.size):
 		eigen_val_vec[i][j] = np.log(max_eigen_value(beta_vals[j], P_elem, spin_conf, B_ex))
 		eigen_val_vec_b[i][j] = np.log(max_eigen_value(beta_const, P_elem, spin_conf, B_vals[j]))
+	if i+2 <= 5:
+		for k in range(beta_vals.size):
+			spes_heat_vec[i] = np.gradient(np.gradient(eigen_val_vec[i], beta_vals), beta_vals)*(beta_vals[k]/(i+2))
 	eigen_val_vec_d[i] = np.gradient(eigen_val_vec_b[i], B_vals)/((i+2)*beta_const)
 	plt.plot(beta_vals, eigen_val_vec[i])
 	print(i+1," done", n_max - i -1, " to go.")
@@ -60,4 +65,10 @@ plt.show()
 for elem in eigen_val_vec_d:
 	plt.plot(B_vals, elem)
 plt.savefig("fig2.pdf")
+plt.show()
+
+
+for elem in spes_heat_vec:
+	plt.plot(beta_vals, elem)
+plt.savefig("fig3.pdf")
 plt.show()
