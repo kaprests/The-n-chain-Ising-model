@@ -19,17 +19,21 @@ def P_elem(spin_vec1, spin_vec2, Be, beta, Jp, Jt):
 	A = beta*Jp * np.matmul(spin_vec1, spin_vec2)
 	B = beta*Jt * np.matmul(spin_vec1, np.roll(spin_vec1, 1))
 	C = (beta*Be/2) * np.sum((spin_vec1 + spin_vec2))
-	return np.exp(A + B + C)
+	return A, B, C
+	#return np.exp(A + B + C)
 
 
 def gen_P_matrix(P_elem, spin_conf, Be, beta, Jp, Jt):
 	n = spin_conf.shape[1]
 	P = np.zeros([2**n, 2**n])
+	A, B, C = np.zeros([2**n, 2**n]), np.zeros([2**n, 2**n]), np.zeros([2**n, 2**n])
 	for i in range(2**n):
 		for j in range(2**n):
-			P[i][j] = P_elem(spin_conf[i], spin_conf[j], Be, beta, Jp, Jt)
+			#P[i][j] = P_elem(spin_conf[i], spin_conf[j], Be, beta, Jp, Jt)
+			A[i][j], B[i][j], C[i][j] = P_elem(spin_conf[i], spin_conf[j], Be, beta, Jp, Jt)
 
-	return P
+	return A, B, C
+#	return P
 
 # P_test tries to compute A, B and C matrices to compare with the matrices from P_fast
 # P_test and P_fast however returns the same as each other, they are both wrong.
@@ -53,10 +57,34 @@ def P_fast(spin_conf, Be, beta, Jp, Jt):
 	A = beta*Jp * np.matmul(spin_conf, spin_conf.T)
 	B = beta*Jt * np.matmul(spin_conf, np.apply_along_axis(np.roll, 1, spin_conf, 1).T)
 	sum_vec = np.sum(spin_conf, axis=1)
-	C = (beta*Be/2) * np.repeat(sum_vec.reshape(len(sum_vec), 1), len(sum_vec), axis=1) + sum_vec.T
+	C = (beta*Be/2) * np.repeat(sum_vec.reshape(len(sum_vec), 1), len(sum_vec), axis=1) + sum_vec
+	# print(np.repeat(sum_vec.reshape(len(sum_vec), 1), len(sum_vec), axis=1) + sum_vec) 
+	#print(A, "A inne i fast")
+	#print(B, "B inne i fast")
+	#print(C, "C inne i fast")
 	return A, B, C
 	#return np.exp(A + B + C)
 
+spin_conf = gen_spin_conf(3)
+A, B, C = gen_P_matrix(P_elem, spin_conf, 1, 1, 1, 1)
+A2, B2, C2 = P_fast(spin_conf, 1, 1, 1, 1)
+A3, B3, C3 = P_test(spin_conf, 1, 1, 1, 1)
+
+print("P_fast")
+print(A2)
+print(B2)
+print(C2)
+
+print("P_test")
+print(A3)
+print(B3)
+print(C3)
+
+print("P_right")
+print(A, "A rett")
+print(B, "B rett")
+print(C, "C rett")
+'''
 spin_conf = gen_spin_conf(2)
 A, B, C = P_test(spin_conf, 1, 2, 2, 1)
 A2, B2, C2, = P_fast(spin_conf, 1, 2, 2, 1)
@@ -73,6 +101,7 @@ print(P3)
 #print(A - A2, "\n\n")
 #print(B - B2, "\n\n")
 #print(C - C2, "\n\n")
+'''
 
 '''
 
