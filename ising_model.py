@@ -22,17 +22,10 @@ def gen_P(spin_conf, Be, beta, Jp, Jt):
 	B = beta*Jt * np.repeat(np.sum(spin_conf * np.apply_along_axis(np.roll, 1, spin_conf, 1), axis=1).reshape(dim,1), dim, axis=1)
 	sum_vec = np.sum(spin_conf, axis=1)
 	C = (beta*Be/2) * (np.tile(sum_vec, [dim, 1]).T + sum_vec.T)
-
 	return np.exp(A + B + C)
 
 
-def max_eigen_value(beta, P_elem, spin_conf, Be, Jp=J_par, Jt=J_tan):
-	P = gen_P_matrix(P_elem, spin_conf, Be, beta, Jp, Jt)
-	e_vals, e_vecs = np.linalg.eig(P) 
-	return np.amax(np.real(e_vals))
-
-
-def max_eigen_value_fast(beta, gen_P, spin_conf, Be, Jp=J_par, Jt=J_tan):
+def max_eigen_value(beta, gen_P, spin_conf, Be, Jp=J_par, Jt=J_tan):
 	e_vals, e_vecs = np.linalg.eig(gen_P(spin_conf, Be, beta, Jp, Jt))
 	return np.amax(np.real(e_vals))
 
@@ -46,10 +39,10 @@ spes_heat_vec = np.zeros([5, 100])
 
 for i in range(n_max):
 	spin_conf = gen_spin_conf(i+1)
-	print(i+1)
+	print("n: ",i+1)
 	for j in range(beta_vals.size):
-		eigen_val_vec[i][j] = np.log(max_eigen_value_fast(beta_vals[j], gen_P, spin_conf, B_ex))
-		eigen_val_vec_b[i][j] = np.log(max_eigen_value_fast(beta_const, gen_P, spin_conf, B_vals[j]))
+		eigen_val_vec[i][j] = np.log(max_eigen_value(beta_vals[j], gen_P, spin_conf, B_ex))
+		eigen_val_vec_b[i][j] = np.log(max_eigen_value(beta_const, gen_P, spin_conf, B_vals[j]))
 	if i+2 <= 5:
 		for k in range(beta_vals.size):
 			spes_heat_vec[i] = np.gradient(np.gradient(eigen_val_vec[i], beta_vals), beta_vals)*(beta_vals[k]/(i+2))
