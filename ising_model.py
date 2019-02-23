@@ -1,6 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-import sympy as sp
+
 
 B_ex = 2
 J_par = 1
