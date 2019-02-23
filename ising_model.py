@@ -5,7 +5,7 @@ import sympy as sp
 B_ex = 2
 J_par = 1
 J_tan = 1
-n_max = 6 # Really n_max -1
+n_max = 8 
 beta_const = 0.5
 
 
@@ -21,7 +21,7 @@ def gen_P(spin_conf, Be, beta, Jp, Jt):
 	A = beta*Jp * np.matmul(spin_conf, spin_conf.T)
 	B = beta*Jt * np.repeat(np.sum(spin_conf * np.apply_along_axis(np.roll, 1, spin_conf, 1), axis=1).reshape(dim,1), dim, axis=1)
 	sum_vec = np.sum(spin_conf, axis=1)
-	C = (beta*Be/2) * (np.tile(sum_vec, [len(sum_vec), 1]).T + sum_vec.T)
+	C = (beta*Be/2) * (np.tile(sum_vec, [dim, 1]).T + sum_vec.T)
 
 	return np.exp(A + B + C)
 
@@ -45,8 +45,8 @@ eigen_val_vec_d = np.zeros([n_max, 100])
 spes_heat_vec = np.zeros([5, 100])
 
 for i in range(n_max):
-	spin_conf = gen_spin_conf(i+2)
-	print(i+2)
+	spin_conf = gen_spin_conf(i+1)
+	print(i+1)
 	for j in range(beta_vals.size):
 		eigen_val_vec[i][j] = np.log(max_eigen_value_fast(beta_vals[j], gen_P, spin_conf, B_ex))
 		eigen_val_vec_b[i][j] = np.log(max_eigen_value_fast(beta_const, gen_P, spin_conf, B_vals[j]))
