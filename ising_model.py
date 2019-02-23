@@ -7,6 +7,7 @@ J_par = 1
 J_tan = 1
 n_max = 8 
 beta_const = 0.5
+kb = 1.3806485279e-23
 
 
 def gen_spin_conf(n):
@@ -32,6 +33,7 @@ def max_eigen_value(beta, gen_P, spin_conf, Be, Jp=J_par, Jt=J_tan):
 
 beta_vals = np.linspace(0.005, 1, 100)
 B_vals = np.linspace(-1, 1, 100)
+T_vals = 1/(kb*beta_vals)
 eigen_val_vec = np.zeros([n_max, 100])
 eigen_val_vec_b = np.zeros([n_max, 100])
 eigen_val_vec_d = np.zeros([n_max, 100])
@@ -45,7 +47,7 @@ for i in range(n_max):
 		eigen_val_vec_b[i][j] = np.log(max_eigen_value(beta_const, gen_P, spin_conf, B_vals[j]))
 	if i+2 <= 5:
 		for k in range(beta_vals.size):
-			spes_heat_vec[i] = np.gradient(np.gradient(eigen_val_vec[i], beta_vals), beta_vals)*(beta_vals[k]/(i+2))
+			spes_heat_vec[i] = np.gradient(np.gradient(eigen_val_vec[i], beta_vals), beta_vals)*((beta_vals[k]**2)/(i+2))
 	eigen_val_vec_d[i] = np.gradient(eigen_val_vec_b[i], B_vals)/((i+2)*beta_const)
 	plt.plot(beta_vals, eigen_val_vec[i])
 	print(i+1," done", n_max - i -1, " to go.")
@@ -58,6 +60,7 @@ plt.savefig("fig2.pdf")
 plt.show()
 
 for elem in spes_heat_vec:
-	plt.plot(beta_vals, elem)
+	# Not sure what's best of plotting with regards to T or beta(T)
+	plt.plot(T_vals, elem)
 plt.savefig("fig3.pdf")
 plt.show()
