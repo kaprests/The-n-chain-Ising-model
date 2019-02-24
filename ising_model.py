@@ -1,5 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
+import time
+
+start = time.time()
 
 B_ex = 2
 J_par = 1
@@ -55,6 +58,10 @@ plt.legend()
 plt.xlabel("beta - 1/kb*T")
 plt.ylabel("Eigenvalue")
 plt.savefig("fig1.pdf")
+
+end = time.time()
+print(end - start)
+
 plt.show()
 
 for i in range(eigen_val_vec_d.shape[0]):
