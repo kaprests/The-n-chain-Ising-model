@@ -19,17 +19,19 @@ def gen_spin_conf(n):
 	return spin_conf
 
 
-def gen_P(spin_conf, Be, beta, Jp, Jt):
+# Generates A, B and C without prefactors Be and beta
+def gen_ABC(spin_conf, Jp=J_par, Jt=J_tan):
 	dim = spin_conf.shape[0]
-	A = beta*Jp * np.matmul(spin_conf, spin_conf.T)
-	B = beta*Jt * np.repeat(np.sum(spin_conf * np.apply_along_axis(np.roll, 1, spin_conf, 1), axis=1).reshape(dim,1), dim, axis=1)
+	A = Jp * np.matmul(spin_conf, spin_conf.T)
+	B = Jt * np.repeat(np.sum(spin_conf * np.apply_along_axis(np.roll, 1, spin_conf, 1), axis=1).reshape(dim,1), dim, axis=1)
 	sum_vec = np.sum(spin_conf, axis=1)
-	C = (beta*Be/2) * (np.tile(sum_vec, [dim, 1]).T + sum_vec.T)
-	return np.exp(A + B + C)
+	C = (1/2) * (np.tile(sum_vec, [dim, 1]).T + sum_vec.T)
+	return A, B, C
 
 
-def max_eigen_value(beta, gen_P, spin_conf, Be, Jp=J_par, Jt=J_tan):
-	e_vals = np.linalg.eigvals(gen_P(spin_conf, Be, beta, Jp, Jt))
+def max_eigen_value(A, B, C, spin_conf, beta, Be):
+	P = np.exp(beta*A + beta*B + beta*Be*C)
+	e_vals = np.linalg.eigvals(P)
 	return np.amax(np.real(e_vals))
 
 
@@ -44,9 +46,10 @@ spes_heat_vec = np.zeros([4, 100])
 for i in range(n_max):
 	spin_conf = gen_spin_conf(i+1)
 	print("n: ",i+1)
+	A, B, C = gen_ABC(spin_conf)
 	for j in range(beta_vals.size):
-		eigen_val_vec[i][j] = np.log(max_eigen_value(beta_vals[j], gen_P, spin_conf, B_ex))
-		eigen_val_vec_b[i][j] = np.log(max_eigen_value(beta_const, gen_P, spin_conf, B_vals[j]))
+		eigen_val_vec[i][j] = np.log(max_eigen_value(A, B, C, spin_conf, beta_vals[j], B_ex))
+		eigen_val_vec_b[i][j] = np.log(max_eigen_value(A, B, C, spin_conf, beta_const, B_vals[j]))
 	if i+1 <= 5 and i+1 >= 2:
 		for k in range(beta_vals.size):
 			spes_heat_vec[i-1] = np.gradient(np.gradient(eigen_val_vec[i], beta_vals), beta_vals)*((beta_vals[k]**2)/(i+2))
@@ -63,6 +66,7 @@ end = time.time()
 print(end - start)
 
 plt.show()
+
 
 for i in range(eigen_val_vec_d.shape[0]):
 	plt.plot(B_vals, eigen_val_vec_d[i], label="n=" + str(i+1))
@@ -82,3 +86,4 @@ plt.xlabel("Temperature - T")
 plt.ylabel("Spesific heat per spin - C_B")
 plt.savefig("fig3.pdf")
 plt.show()
+
