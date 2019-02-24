@@ -26,7 +26,7 @@ def gen_P(spin_conf, Be, beta, Jp, Jt):
 
 
 def max_eigen_value(beta, gen_P, spin_conf, Be, Jp=J_par, Jt=J_tan):
-	e_vals, e_vecs = np.linalg.eig(gen_P(spin_conf, Be, beta, Jp, Jt))
+	e_vals = np.linalg.eigvals(gen_P(spin_conf, Be, beta, Jp, Jt))
 	return np.amax(np.real(e_vals))
 
 
