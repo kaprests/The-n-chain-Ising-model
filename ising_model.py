@@ -7,7 +7,7 @@ start = time.time()
 B_ex = 2
 J_par = 1
 J_tan = 1
-n_max = 8 
+n_max = 8
 beta_const = 0.5
 kb = 1.3806485279e-23
 
@@ -63,7 +63,7 @@ plt.ylabel("Eigenvalue")
 plt.savefig("fig1.pdf")
 
 end = time.time()
-print(end - start)
+print("Computation time: ", end - start, " seconds")
 
 plt.show()
 
