@@ -1,5 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
+import time
+
+start = time.time()
 
 B_ex = 2
 J_par = 1
@@ -58,7 +61,12 @@ plt.legend()
 plt.xlabel("beta - 1/kb*T")
 plt.ylabel("Eigenvalue")
 plt.savefig("fig1.pdf")
+
+end = time.time()
+print(end - start)
+
 plt.show()
+
 
 for i in range(eigen_val_vec_d.shape[0]):
 	plt.plot(B_vals, eigen_val_vec_d[i], label="n=" + str(i+1))
@@ -78,3 +86,4 @@ plt.xlabel("Temperature - T")
 plt.ylabel("Spesific heat per spin - C_B")
 plt.savefig("fig3.pdf")
 plt.show()
+
