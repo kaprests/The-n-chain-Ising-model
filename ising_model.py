@@ -56,9 +56,9 @@ for i in range(n_max):
 	eigen_val_vec_d[i] = np.gradient(eigen_val_vec_b[i], B_vals)/((i+2)*beta_const)
 	print(i+1," done", n_max - i -1, " to go.")
 	plt.plot(beta_vals, eigen_val_vec[i], label="n = " + str(i+1))
-plt.title("Largest eigenvalues -  B=" + str(B_ex) + ", Jp=" + str(J_par) + ", Jt=" + str(J_tan))
+plt.title("Largest eigenvalues -  $B=$" + str(B_ex) + ", $Jp=$" + str(J_par) + ", $Jt=$" + str(J_tan))
 plt.legend()
-plt.xlabel("beta - 1/kb*T")
+plt.xlabel("beta - $1/k_{b}} \dot T$")
 plt.ylabel("Eigenvalue")
 plt.savefig("fig1.pdf")
 
@@ -70,20 +70,20 @@ plt.show()
 
 for i in range(eigen_val_vec_d.shape[0]):
 	plt.plot(B_vals, eigen_val_vec_d[i], label="n=" + str(i+1))
-plt.title("Magnetization per spin - beta = " + str(beta_const)  + ", Jp=" + str(J_par) + ", Jt=" + str(J_tan))
+plt.title("Magnetization per spin - $beta = $" + str(beta_const)  + ",$ Jp=$" + str(J_par) + ", $Jt=$" + str(J_tan))
 plt.legend()
-plt.xlabel("External magnetic field - B")
-plt.ylabel("Magnetizatio per spin - m")
+plt.xlabel("External magnetic field - $B$")
+plt.ylabel("Magnetizatio per spin - $m$")
 plt.savefig("fig2.pdf")
 plt.show()
 
 for i in range(spes_heat_vec.shape[0]):
 	# Not sure what's best of plotting with regards to T or beta(T)
 	plt.plot(T_vals, spes_heat_vec[i], label="n=" + str(i+2))
-plt.title("Specific heat per spin -  B=" + str(B_ex) + ", Jp=" + str(J_par) + ", Jt=" + str(J_tan))
+plt.title("Specific heat per spin -  $B=$" + str(B_ex) + ", $Jp=$" + str(J_par) + ", $Jt=$" + str(J_tan))
 plt.legend()
-plt.xlabel("Temperature - T")
-plt.ylabel("Spesific heat per spin - C_B")
+plt.xlabel("Temperature - $T$")
+plt.ylabel("Spesific heat per spin - $C_{B}$")
 plt.savefig("fig3.pdf")
 plt.show()
 
