@@ -73,7 +73,7 @@ for i in range(eigen_val_vec_d.shape[0]):
 plt.title("Magnetization per spin - $beta = $" + str(beta_const)  + ",$ Jp=$" + str(J_par) + ", $Jt=$" + str(J_tan))
 plt.legend()
 plt.xlabel("External magnetic field - $B$")
-plt.ylabel("Magnetizatio per spin - $m$")
+plt.ylabel("Magnetization per spin - $m$")
 plt.savefig("fig2.pdf")
 plt.show()
 
