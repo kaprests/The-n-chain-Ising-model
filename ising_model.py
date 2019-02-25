@@ -43,6 +43,8 @@ eigen_val_vec_b = np.zeros([n_max, 100])
 eigen_val_vec_d = np.zeros([n_max, 100])
 spes_heat_vec = np.zeros([4, 100])
 
+
+# Loop computes everything using functions and values defined above:
 for i in range(n_max):
 	spin_conf = gen_spin_conf(i+1)
 	print("n: ",i+1)
@@ -55,18 +57,20 @@ for i in range(n_max):
 			spes_heat_vec[i-1] = np.gradient(np.gradient(eigen_val_vec[i], beta_vals), beta_vals)*((beta_vals[k]**2)/(i+2))
 	eigen_val_vec_d[i] = np.gradient(eigen_val_vec_b[i], B_vals)/((i+2)*beta_const)
 	print(i+1," done", n_max - i -1, " to go.")
+
+end = time.time()
+print("Computation time: ", end - start, " seconds")
+
+
+# Computations done, plotting:
+for i in range(eigen_val_vec.shape[0]):
 	plt.plot(beta_vals, eigen_val_vec[i], label="n = " + str(i+1))
 plt.title("Largest eigenvalues -  $B=$" + str(B_ex) + ", $Jp=$" + str(J_par) + ", $Jt=$" + str(J_tan))
 plt.legend()
 plt.xlabel("beta - $1/k_{b}} \dot T$")
 plt.ylabel("Eigenvalue")
 plt.savefig("fig1.pdf")
-
-end = time.time()
-print("Computation time: ", end - start, " seconds")
-
 plt.show()
-
 
 for i in range(eigen_val_vec_d.shape[0]):
 	plt.plot(B_vals, eigen_val_vec_d[i], label="n=" + str(i+1))
@@ -86,4 +90,3 @@ plt.xlabel("Temperature - $T$")
 plt.ylabel("Spesific heat per spin - $C_{B}$")
 plt.savefig("fig3.pdf")
 plt.show()
-
