@@ -7,7 +7,9 @@ start = time.time()
 B_ex = 2
 J_par = 1
 J_tan = 1
-n_max = 8
+# Runtime around 9 seconds with n_max = 8, almost instant for lower values.
+# n_max = 10 takes quite some time.
+n_max = 10
 beta_const = 0.5
 kb = 1.3806485279e-23
 
